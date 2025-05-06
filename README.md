@@ -1,4 +1,4 @@
-# create a repository in Azure DevOps using Terraform 
+# Create a repository in Azure DevOps using Terraform 
 Step 1: Create an Azure DevOps Repository using Terraform
 1.Set Up Terraform:
 Install Terraform on your local machine.

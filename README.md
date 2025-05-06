@@ -56,6 +56,7 @@ Replace YOUR_AZURE_SUBSCRIPTION with the name of your Azure service connection.
 Replace YOUR_APP_NAME with the name of your Azure Web App.
 
 Step 4: Run the Pipeline
+
 1.Commit and Push Changes:
 Commit your changes to the azure-pipelines.yml file and push them to your repository.
 The pipeline will trigger automatically based on the master branch.

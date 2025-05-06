@@ -27,17 +27,6 @@ Initialize a new Git repository in your project directory
 4.Push to Azure DevOps:
 Add the Azure DevOps repository as a remote and push your code:
 
-Step 3: Set Up CI/CD Pipeline in Azure DevOps
-1.Create a Pipeline:
-In Azure DevOps, navigate to Pipelines and create a new pipeline.
-Select your repository and configure the pipeline using the YAML file.
-
-2.Define the Pipeline YAML:
-Create a azure-pipelines.yml file in your project root with the following content
-
-3.Run the Pipeline:
-Save and run the pipeline to build, test, and deploy your .NET application.
-
 # Azure DevOps pipeline to deploy the .NET application to a development environment 
 Step 1: Define the Pipeline YAML
 Create or Update azure-pipelines.yml:

@@ -1,0 +1,95 @@
+
+Define the Azure DevOps Provider:
+provider "azuredevops" {
+  org_service_url       = "https://dev.azure.com/YOUR_ORG"
+  personal_access_token = "YOUR_PERSONAL_ACCESS_TOKEN"
+}
+
+Create a Repository:
+resource "azuredevops_git_repository" "example" {
+  project_id = azuredevops_project.project.id
+  name       = "example-repo"
+  initialization {
+    init_type = "Clean"
+  }
+}
+
+create a .net application:
+dotnet new webapp -o MyWebApp
+cd MyWebApp
+
+initialize git Repository
+git init
+git add .
+git commit -m "Initial commit"
+
+push to azure devops:
+git remote add origin https://dev.azure.com/YOUR_ORG/YOUR_PROJECT/_git/example-repo
+git push -u origin master
+
+Setup ci/cd pipelines in azure devops:
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '5.x'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- script: 'dotnet build --configuration Release'
+  displayName: 'Build project'
+
+- script: 'dotnet test --no-build --verbosity normal'
+  displayName: 'Run tests'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+
+
+Define the Pipeline YAML:
+trigger:
+- master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '5.x'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- script: 'dotnet build --configuration Release'
+  displayName: 'Build project'
+
+- script: 'dotnet test --no-build --verbosity normal'
+  displayName: 'Run tests'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'YOUR_AZURE_SUBSCRIPTION'
+    appName: 'YOUR_APP_NAME'
+    package: '$(Build.ArtifactStagingDirectory)/**/*.zip'
+  condition: succeeded()
+
+- task: SendEmail@1
+  inputs:
+    to: 'your-email@example.com'
+    subject: 'Build Failed'
+    body: 'The build for the project has failed. Please check the pipeline logs for more details.'
+  condition: failed()
+
+
